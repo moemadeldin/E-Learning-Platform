@@ -16,12 +16,15 @@
     'badgeColor' => 'bg-yellow-400',
     'labelColor' => 'bg-dark-900',
     'labelTextColor' => 'text-black',
+    'courseUrl' => ''
 ])
 
 <div class="course-card bg-dark-700 rounded-xl overflow-hidden shadow-lg">
     <div class="relative h-40">
         {{-- Actual Course Thumbnail --}}
-        <img src="{{ $courseThumbnail }}" alt="Course Thumbnail" class="w-full h-full object-cover">
+        <a href="{{ $courseUrl }}" class="w-full h-full">
+            <img src="{{ $courseThumbnail }}" alt="Course Thumbnail" class="w-full h-full object-cover">
+        </a>
 
         {{-- Badge --}}
         @if ($badgeText)
@@ -39,9 +42,10 @@
     </div>
 
     <div class="p-5">
-        <h3 class="text-lg font-bold text-white mb-1">{{ $title }}</h3>
+        <a href="{{ $courseUrl }}">
+            <h3 class="text-lg font-bold text-white mb-1">{{ $title }}</h3>
+        </a>
         <p class="text-slate-400 text-sm mb-4">{{ $description }}</p>
-
         {{-- <div class="flex justify-between text-sm text-slate-500 mb-3">
             <div><i class="far fa-list-alt mr-2"></i>{{ $lessons }} Lessons</div>
             <div><i class="far fa-clock mr-2"></i>{{ $hours }} Hours</div>

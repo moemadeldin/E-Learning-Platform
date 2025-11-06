@@ -35,7 +35,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('courses.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('dashboard.courses.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <!-- Name -->

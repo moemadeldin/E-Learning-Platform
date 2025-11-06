@@ -23,7 +23,7 @@ final class CourseController extends Controller
 
     public function index(CourseFilterRequest $request): View
     {
-        $data = $this->courseService->getCoursesList(Auth::user(), $request->validated());
+        $data = $this->courseService->getCoursesList(Auth::user(), $request->filters());
 
         return view('dashboard.courses.index', [
             'courses' => $data['courses'],

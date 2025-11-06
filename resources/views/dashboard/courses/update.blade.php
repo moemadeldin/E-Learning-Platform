@@ -35,7 +35,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('courses.update', $course) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('dashboard.courses.update', $course) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <!-- Name -->
@@ -134,7 +134,7 @@
                                 <label for="user_id" class="block text-gray-700 font-semibold mb-2">Teacher</label>
                                 <select name="user_id" id="user_id" required
                                     class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-                                    <option value="" disabled {{ old('user_id', $course->teacher->name) ? '' : 'selected' }}>Select Teacher</option>
+                                    <option value="" disabled {{ old('user_id', $course->teacher->name ?? null) ? '' : 'selected' }}>Select Teacher</option>
                                     @foreach ($teachers as $teacher)
                                         <option value="{{ $teacher->id }}" {{ old('user_id') == $teacher->id ? 'selected' : '' }}>
                                             {{ $teacher->name }}

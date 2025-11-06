@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\CourseLevel;
 use App\Traits\Sluggable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,7 +37,7 @@ final class Course extends Model
 
     public function scopeGetCourses(Builder $query): Builder
     {
-        return $query->with('user')->limit(self::NUMBER_OF_COURSES_FOR_HOME_PAGE);
+        return $query->with(['user', 'category'])->limit(self::NUMBER_OF_COURSES_FOR_HOME_PAGE);
     }
 
     public function scopeFilteredCourses(Builder $query, ?int $is_free, ?int $categoryId): Builder
@@ -58,15 +59,17 @@ final class Course extends Model
         return $query->where('user_id', $user->id);
     }
 
-    public function scopeFilterIsFree(Builder $query, ?string $status): Builder
+    public function scopeFilterIsFree(Builder $query, string|int|null $status): Builder
     {
-        if (! $status) {
+        if ($status === null || $status === '') {
             return $query;
         }
-        if ($status === '1') {
+
+        if ($status === 1 || $status === '1') {
             return $query->where('is_free', true);
         }
-        if ($status === '0') {
+
+        if ($status === 0 || $status === '0') {
             return $query->where('is_free', false);
         }
 
@@ -81,6 +84,27 @@ final class Course extends Model
 
         return $query->where('category_id', $categoryId);
     }
+
+    public function getFormattedCreatedAtAttribute(): string
+    {
+        return Carbon::parse($this->created_at)->format('m/Y');
+    }
+
+    public function getUpperCaseLanguageAttribute(): string
+    {
+        return mb_strtoupper($this->language);
+    }
+
+    public function getCapitalizedTitleAttribute(): string
+    {
+        return ucwords($this->name);
+    }
+
+    public function getCapitalizedInstructorAttribute(): string
+    {
+        return ucwords($this->user->teacher->full_name);
+    }
+
     protected function casts(): array
     {
         return [

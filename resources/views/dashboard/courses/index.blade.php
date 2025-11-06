@@ -7,7 +7,7 @@
 
             {{-- Create Button --}}
             <div class="flex justify-end mb-6">
-                <a href="{{ route('courses.create') }}"
+                <a href="{{ route('dashboard.courses.create') }}"
                     class="inline-flex items-center px-5 py-3 bg-blue-600 text-white text-base font-semibold rounded hover:bg-blue-700 transition">
                     <i class="fas fa-plus mr-2"></i>
                     Create Course
@@ -15,7 +15,7 @@
             </div>
             <x-flash-message />
             {{-- Filter Form --}}
-            <form method="GET" action="{{ route('courses.index') }}" class="mb-6 flex flex-wrap gap-4">
+            <form method="GET" action="{{ route('dashboard.courses.index') }}" class="mb-6 flex flex-wrap gap-4">
                 <div>
                     <label for="category_id" class="block text-base font-medium text-gray-700">Category</label>
                     <select name="category_id" id="category_id"
@@ -44,7 +44,7 @@
                         Filter
                     </button>
 
-                    <a href="{{ route('courses.index') }}"
+                    <a href="{{ route('dashboard.courses.index') }}"
                         class="px-5 py-2 bg-gray-300 text-gray-700 rounded text-base hover:bg-gray-400">
                         Reset
                     </a>
@@ -89,15 +89,15 @@
                                 <td class="px-4 py-3">{{ $course->language }}</td>
                                 <td class="px-4 py-3">
                                     <div class="flex flex-wrap gap-2 justify-center">
-                                        <a href="{{ route('courses.show', $course) }}"
+                                        <a href="{{ route('dashboard.courses.show', $course) }}"
                                             class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 text-sm">
                                             Show
                                         </a>
-                                        <a href="{{ route('courses.edit', $course) }}"
+                                        <a href="{{ route('dashboard.courses.edit', $course) }}"
                                             class="px-4 py-2 text-white bg-yellow-500 rounded hover:bg-yellow-600 text-sm">
                                             Update
                                         </a>
-                                        <form action="{{ route('courses.destroy', $course) }}" method="POST"
+                                        <form action="{{ route('dashboard.courses.destroy', $course) }}" method="POST"
                                             onsubmit="return confirm('Are you sure?')">
                                             @csrf
                                             @method('DELETE')

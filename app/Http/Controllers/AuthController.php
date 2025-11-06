@@ -44,8 +44,10 @@ final class AuthController extends Controller
             $user = $this->authService->login($dto);
             if ($user->isActive()) {
                 Auth::login($user);
+
                 return redirect()->route('home')->with('success', 'logged in successfully');
             }
+
             return redirect()->route('login')->with('error', 'Login failed');
         } catch (Exception $e) {
             return redirect()->route('login')->with('error', $e->getMessage());

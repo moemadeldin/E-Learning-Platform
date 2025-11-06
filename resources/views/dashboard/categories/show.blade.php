@@ -25,8 +25,6 @@
                 <div class="w-full lg:w-3/4 xl:w-1/2">
                     <!-- Card 1 -->
                     <div class="bg-white p-8 rounded-lg shadow-xl">
-                        <img class="w-full h-64 object-cover rounded-t-lg"
-                            src="https://randomuser.me/api/portraits/men/45.jpg" alt="Random User">
                         <div class="mt-6">
                             <h3 class="text-2xl font-semibold">Name: {{ $category->name }}</h3>
                             <div class="mt-6 flex space-x-4">

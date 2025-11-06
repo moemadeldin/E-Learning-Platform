@@ -18,12 +18,15 @@ use Illuminate\Support\Str;
 
 final class CourseService implements CourseServiceInterface
 {
-    public function getCoursesList(User $user, array $filters = []): array
+    public function getCoursesList(?User $user, array $filters = []): array
     {
-        $query = $user->isAdmin()
-            ? Course::filteredCourses($filters['is_free'] ?? null, $filters['category_id'] ?? null)
-            : Course::courseOwner($user)
-                ->filteredCourses($filters['is_free'] ?? null, $filters['category_id'] ?? null);
+        $query = Course::query();
+
+        if ($user && $user->isTeacher() && ! $user->isAdmin()) {
+            $query->courseOwner($user);
+        }
+
+        $query->filteredCourses($filters['is_free'] ?? null, $filters['category_id'] ?? null);
 
         $courses = $query->paginate(Pagination::COURSES_PER_PAGE->value)->withQueryString();
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin;
 
-use App\Models\Course;
 use Illuminate\Foundation\Http\FormRequest;
 
 final class CourseFilterRequest extends FormRequest
@@ -14,7 +13,7 @@ final class CourseFilterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('viewAny', Course::class);
+        return true;
     }
 
     /**

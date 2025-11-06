@@ -7,8 +7,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Teacher;
-use Illuminate\View\View;
 use App\Models\User;
+use Illuminate\View\View;
 
 final class DashboardController extends Controller
 {
@@ -18,6 +18,7 @@ final class DashboardController extends Controller
         $teachers = User::activeTeachers()->count();
         $courses = Course::with('teacher')->count();
         $teacherRequests = Teacher::teacherWithRequests()->count();
+
         return view('dashboard.analytics', compact(['users', 'teachers', 'courses', 'teacherRequests']));
     }
 }

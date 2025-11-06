@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -28,7 +28,7 @@
                         <img class="w-full h-64 object-cover rounded-t-lg"
                             src="https://randomuser.me/api/portraits/men/45.jpg" alt="Random User">
                         <div class="mt-6">
-                            <h3 class="text-2xl font-semibold">Name: {{ $user->name }}</h3>
+                            <h3 class="text-2xl font-semibold">Name: {{ $course->name }}</h3>
                             <p class="text-gray-500">Email: {{ $user->email }}</p>
                             <p class="text-gray-500">Role: {{ $user->roles->first()->name }}</p>
                             @if ($user->is_active)
@@ -63,4 +63,4 @@
     </div>
 </body>
 
-</html>
+</html> --}}

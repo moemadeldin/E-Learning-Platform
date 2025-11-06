@@ -22,10 +22,12 @@
                 <h2 class="text-2xl font-bold mb-6 text-center">Popular Categories</h2>
                 <div class="flex flex-wrap justify-center gap-3">
                     @foreach ($categories as $category)
-                        <button
-                            class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-blue-400 rounded-full flex items-center">
-                            <i class="fas fa-laptop-code mr-2"></i> {{ $category->name }}
-                        </button>
+                        <a href="{{ route('courses.index', ['category_id' => $category->id]) }}">
+                            <button
+                                class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-blue-400 rounded-full flex items-center cursor-pointer">
+                                <i class="fas fa-laptop-code mr-2"></i> {{ $category->name }}
+                            </button>
+                        </a>
                     @endforeach
                 </div>
                 {{-- Featured Courses --}}
@@ -34,10 +36,10 @@
                     @foreach ($courses as $course)
                         <x-home.hero.course-card category="{{ $course->category->name }}"
                             courseThumbnail="{{ asset('storage/' . $course->thumbnail) }}" badgeText="Best Seller"
-                            title="{{ $course->name }}" description="{{ $course->description }}" lessons="12" hours="8"
-                            levelText="{{ $course->level }}" levelColorFrom="blue-900" levelColorTo="blue-200" rating="4.5"
-                            instructorName="{{ $course->user->teacher->full_name}}"
-                            price="{{ $course->formatted_price }}" />
+                            title="{{ $course->capitalized_title }}" description="{{ $course->description }}" lessons="12"
+                            hours="8" levelText="{{ $course->level->label() }}" levelColorFrom="blue-900"
+                            levelColorTo="blue-200" rating="4.5" instructorName="{{ $course->capitalized_instructor}}"
+                            price="{{ $course->formatted_price }}" courseUrl="{{ route('courses.show', $course) }}" />
                     @endforeach
                 </section>
         </main>

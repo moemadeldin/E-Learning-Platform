@@ -80,10 +80,12 @@ final class User extends Authenticatable
     {
         return $this->is_active === true;
     }
+
     public function scopeActiveUsersCount(Builder $query): Builder
     {
         return $query->where('is_active', true);
     }
+
     public function scopeActiveTeachers(Builder $query): Builder
     {
         return $query->whereHas('roles', function (Builder $q): void {

@@ -12,7 +12,7 @@ final class HomeController extends Controller
 {
     public function __invoke(): View
     {
-        $categories = Category::select('name')->get();
+        $categories = Category::select('id', 'name')->get();
         $courses = Course::getCourses()->get();
 
         return view('pages.home', compact(['categories', 'courses']));

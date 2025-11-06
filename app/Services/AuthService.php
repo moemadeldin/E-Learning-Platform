@@ -37,6 +37,7 @@ final class AuthService implements AuthServiceInterface
         if (! $user->isActive()) {
             return false;
         }
+
         return $user;
     }
 }

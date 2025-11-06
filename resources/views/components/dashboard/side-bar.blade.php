@@ -9,7 +9,7 @@
                 </a>
             </li>
             <li class="flex items-center hover:bg-blue-700 p-2 rounded cursor-pointer">
-                <a href="{{ route('courses.index') }}" class="flex items-center text-white w-full">
+                <a href="{{ route('dashboard.courses.index') }}" class="flex items-center text-white w-full">
                     <i class="fas fa-graduation-cap mr-2"></i> Courses
                 </a>
             </li>

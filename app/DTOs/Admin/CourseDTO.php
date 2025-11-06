@@ -14,7 +14,7 @@ final readonly class CourseDTO
         public string $description,
         public string $long_description,
         public string $price,
-        public string $is_free,
+        public string|int $is_free,
         public string $level,
         public string $language,
         public string $category_id,

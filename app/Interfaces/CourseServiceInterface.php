@@ -11,7 +11,7 @@ use Illuminate\Http\UploadedFile;
 
 interface CourseServiceInterface
 {
-    public function getCoursesList(User $user, array $filters = []): array;
+    public function getCoursesList(?User $user, array $filters = []): array;
 
     public function createCourse(UploadedFile $thumbnail, CourseDTO $dto): Course;
 

@@ -2,7 +2,9 @@
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <div class="flex items-center">
             <div class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-                E‑Learning Platform
+                <a href="{{ route('home') }}">
+                    E‑Learning Platform
+                </a>
             </div>
             <x-home.header.navigation />
         </div>
