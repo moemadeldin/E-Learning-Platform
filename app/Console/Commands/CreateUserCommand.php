@@ -62,15 +62,24 @@ final class CreateUserCommand extends Command
             $newUser->roles()->attach($role->id);
             if ($roleName === Roles::TEACHER->value) {
                 $newUser->teacher()->create([
-                    'first_name' => $teacher['first_name'],
-                    'last_name' => $teacher['last_name'],
                     'national_id' => $teacher['national_id'],
                     'category_id' => $teacher['category_id'],
                     'is_approved' => true,
                     'is_active' => true,
                     'hire_date' => now(),
                 ]);
+                $newUser->profile()->create([
+                    'first_name' => $teacher['first_name'],
+                    'last_name' => $teacher['last_name'],
+                ]);
             }
+            if ($roleName === Roles::USER->value) {
+                $newUser->profile()->create([
+                    'first_name' => $user['first_name'],
+                    'last_name' => $user['last_name'],
+                ]);
+            }
+
         });
         $this->info('User '.$user['email'].' created successfully');
     }

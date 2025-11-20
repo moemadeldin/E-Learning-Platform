@@ -13,6 +13,3 @@ foreach (['guest', 'admin', 'teacher', 'auth'] as $file) {
 Route::get('/home', HomeController::class)->name('home');
 Route::resource('/courses', CourseController::class);
 Route::view('/about-us', 'pages.about')->name('about');
-
-Route::view('/profile', 'pages.profile');
-Route::view('/profiles', 'pages.update-profile');

@@ -22,7 +22,7 @@
                 <h2 class="text-2xl font-bold mb-6 text-center">Popular Categories</h2>
                 <div class="flex flex-wrap justify-center gap-3">
                     @foreach ($categories as $category)
-                        <a href="{{ route('courses.index', $category) }}">
+                        <a href="{{ route('courses.index', ['slug' => $category->slug]) }}">
                             <button
                                 class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-blue-400 rounded-full flex items-center cursor-pointer">
                                 <i class="fas fa-laptop-code mr-2"></i> {{ $category->name }}

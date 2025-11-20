@@ -6,12 +6,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 final class Profile extends Model
 {
+    use SoftDeletes;
+
+    protected $guarded = ['id'];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return ucwords($this->first_name.' '.$this->last_name);
     }
 
     /**
