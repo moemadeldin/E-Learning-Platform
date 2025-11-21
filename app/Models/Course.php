@@ -126,6 +126,11 @@ final class Course extends Model
     protected function casts(): array
     {
         return [
+            'user_id' => 'integer',
+            'category_id' => 'integer',
+            'slug' => 'string',
+            'description' => 'text',
+            'long_description' => 'text',
             'price' => 'float',
             'is_free' => 'boolean',
             'level' => CourseLevel::class,
