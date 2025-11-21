@@ -2,21 +2,20 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Teacher\CourseController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:admin,teacher'])
-    ->prefix('dashboard')
+Route::middleware(['auth', 'role:teacher'])
+    ->prefix('dashboard/teacher')
     ->group(function (): void {
         Route::get('/', DashboardController::class)->name('dashboard');
         Route::resource('courses', CourseController::class)->names([
-            'index' => 'dashboard.courses.index',
-            'create' => 'dashboard.courses.create',
-            'store' => 'dashboard.courses.store',
-            'show' => 'dashboard.courses.show',
-            'edit' => 'dashboard.courses.edit',
-            'update' => 'dashboard.courses.update',
-            'destroy' => 'dashboard.courses.destroy',
+            'index' => 'dashboard.teacher.courses.index',
+            'create' => 'dashboard.teacher.courses.create',
+            'store' => 'dashboard.teacher.courses.store',
+            'edit' => 'dashboard.teacher.courses.edit',
+            'update' => 'dashboard.teacher.courses.update',
+            'destroy' => 'dashboard.teacher.courses.destroy',
         ]);
     });

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PasswordRecoveryController;
-use App\Http\Controllers\TeacherRegistrationController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\PasswordRecoveryController;
+use App\Http\Controllers\Auth\TeacherRegistrationController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['guest'])

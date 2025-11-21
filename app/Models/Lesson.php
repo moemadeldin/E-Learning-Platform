@@ -20,11 +20,10 @@ final class Lesson extends Model
      *
      * @return array<string, string>
      */
-    public function course(): BelongsTo
+    public function section(): BelongsTo
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Section::class);
     }
-
     public function attachments(): HasMany
     {
         return $this->hasMany(LessonAttachment::class);
@@ -33,7 +32,7 @@ final class Lesson extends Model
     protected function casts(): array
     {
         return [
-            'course_id' => 'integer',
+            'section_id' => 'integer',
             'title' => 'string',
             'content' => 'text',
         ];

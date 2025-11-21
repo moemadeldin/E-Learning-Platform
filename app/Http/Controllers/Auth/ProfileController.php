@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Actions\UpdateProfileAction;
 use App\DTOs\Auth\UpdateProfileDTO;
-use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\UpdateProfileRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 

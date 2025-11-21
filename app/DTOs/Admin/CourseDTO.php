@@ -18,7 +18,7 @@ final readonly class CourseDTO
         public string $level,
         public string $language,
         public string $category_id,
-        public string $user_id,
+        public int|string $user_id,
     ) {}
 
     public static function fromArray(array $data): self
@@ -33,7 +33,7 @@ final readonly class CourseDTO
             $data['level'],
             $data['language'],
             $data['category_id'],
-            $data['user_id'],
+            $data['user_id'] ?? auth()->id(),
         );
     }
 

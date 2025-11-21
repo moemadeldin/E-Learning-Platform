@@ -79,14 +79,16 @@
                     <li>
                         <div class="flex items-center">
                             <i class="fas fa-chevron-right text-gray-500 mx-2"></i>
-                            <a href="#"
+                            <a href="{{ route('courses.index') }}"
                                 class="ml-1 text-sm font-medium text-gray-400 hover:text-white md:ml-2">Courses</a>
                         </div>
                     </li>
                     <li aria-current="page">
                         <div class="flex items-center">
                             <i class="fas fa-chevron-right text-gray-500 mx-2"></i>
-                            <span class="ml-1 text-sm font-medium text-gray-200 md:ml-2">Web Development</span>
+                            <a href="{{ route('courses.index', ['slug' => $course->category->slug]) }}"
+                                class="ml-1 text-sm font-medium text-gray-200 md:ml-2">{{ $course->category->name }}
+                            </a>
                         </div>
                     </li>
                 </ol>
@@ -109,7 +111,7 @@
                         <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400">
                             <div class="flex items-center">
                                 <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                <span>4.7 (12,548 ratings)</span>
+                                <span> (12,548 ratings)</span>
                             </div>
                             <div class="flex items-center">
                                 <i class="fas fa-user-graduate mr-1"></i>
@@ -136,20 +138,20 @@
 
                     <!-- Instructor Info -->
                     <div class="bg-dark-800 rounded-lg p-6 mb-8">
-                        <h2 class="text-xl font-bold mb-4">Created by</h2>
+                        <h2 class="text-xl font-bold mb-4">Created by {{ $course->user->name }}</h2>
                         <div class="flex items-center">
-                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Instructor"
+                            <img src="{{ asset('/storage/' . $course->user->profile->avatar) }}" alt="Instructor"
                                 class="w-16 h-16 rounded-full mr-4">
                             <div>
                                 <h3 class="font-bold text-lg">{{ $course->capitalized_instructor }}</h3>
                                 <p class="text-gray-400 mb-2">Senior Web Developer & Instructor</p>
                                 <div class="flex items-center text-sm text-gray-400">
                                     <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                    <span class="mr-4">4.7 Instructor Rating</span>
+                                    <span class="mr-4">{{ $course->user->teacher->avg_rating }} Instructor Rating</span>
                                     <i class="fas fa-user-graduate mr-1"></i>
-                                    <span class="mr-4">245,892 Reviews</span>
+                                    <span class="mr-4">{{ $course->user->teacher->reviews_count }} Reviews</span>
                                     <i class="fas fa-users mr-1"></i>
-                                    <span>1,284,295 Students</span>
+                                    <span>{{ $course->user->teacher->students_count }} Students</span>
                                 </div>
                             </div>
                         </div>

@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Actions\TeacherRegistrationAction;
 use App\DTOs\Auth\TeacherRegistrationDTO;
-use App\Http\Requests\StoreTeacherRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\StoreTeacherRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;

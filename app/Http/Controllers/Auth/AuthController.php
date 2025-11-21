@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\DTOs\Auth\LoginDTO;
 use App\DTOs\Auth\RegisterDTO;
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\StoreUserRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\StoreUserRequest;
 use App\Interfaces\AuthServiceInterface;
 use Exception;
 use Illuminate\Http\RedirectResponse;

@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lessons', function (Blueprint $table): void {
+        Schema::create('sections', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('section_id')
+            $table->foreignId('course_id')
                 ->nullable()
                 ->index()
-                ->constrained('section')
+                ->constrained('courses')
                 ->cascadeOnDelete();
             $table->string('title')->nullable();
-            $table->text('content')->nullable();
             $table->unsignedTinyInteger('order')->default(0);
             $table->timestamps();
             $table->softDeletes();

@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\DTOs\Auth\ForgotPasswordDTO;
 use App\DTOs\Auth\ResetPasswordDTO;
-use App\Http\Requests\ForgotPasswordRequest;
-use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Interfaces\PasswordRecoveryServiceInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
