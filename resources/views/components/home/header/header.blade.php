@@ -25,6 +25,10 @@
                         Logout
                     </button>
                 </form>
+                <a href="{{ route('profiles.index')}}"
+                    class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-md text-white font-medium transition cursor-pointer">
+                    My Profile
+            </a>
             @else
                 <a href="{{ route('login') }}" class="px-4 py-2 text-slate-300 hover:text-white transition font-medium">
                     Sign In
