@@ -19,6 +19,7 @@ final readonly class CourseDTO
         public string $language,
         public string $category_id,
         public int|string $user_id,
+        public array $requirements,
     ) {}
 
     public static function fromArray(array $data): self
@@ -34,6 +35,7 @@ final readonly class CourseDTO
             $data['language'],
             $data['category_id'],
             $data['user_id'] ?? auth()->id(),
+            $data['requirements'] ?? [],
         );
     }
 
@@ -50,6 +52,7 @@ final readonly class CourseDTO
             'language' => $this->language,
             'category_id' => $this->category_id,
             'user_id' => $this->user_id,
+            'requirements' => $this->requirements,
         ];
     }
 }

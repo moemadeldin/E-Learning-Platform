@@ -35,7 +35,8 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('dashboard.teacher.courses.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('dashboard.teacher.courses.store') }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
 
                         <!-- Name -->
@@ -140,6 +141,44 @@
                                 </select>
                             </div>
                         @endif
+                        <!-- Requirements -->
+                        <div class="mb-4">
+                            <label for="requirements"
+                                class="block text-gray-700 font-semibold mb-2">Requirements</label>
+
+                            <!-- Requirements Container -->
+                            <div id="requirementsContainer">
+                                @if(old('requirements', []))
+                                    @foreach(old('requirements', []) as $index => $requirement)
+                                        <div class="requirement-item flex gap-2 mb-2">
+                                            <input type="text" name="requirements[]" value="{{ $requirement }}"
+                                                class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                                placeholder="Enter a requirement (e.g., Basic programming knowledge)">
+                                            <button type="button" onclick="removeRequirement(this)"
+                                                class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="requirement-item flex gap-2 mb-2">
+                                        <input type="text" name="requirements[]"
+                                            class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                            placeholder="Enter a requirement (e.g., Basic programming knowledge)">
+                                        <button type="button" onclick="removeRequirement(this)"
+                                            class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <!-- Add Requirement Button -->
+                            <button type="button" onclick="addRequirement()"
+                                class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">
+                                <i class="fas fa-plus mr-2"></i>Add Requirement
+                            </button>
+                        </div>
                         <!-- Submit -->
                         <div class="flex justify-end">
                             <button type="submit"
@@ -152,6 +191,32 @@
             </main>
         </div>
     </div>
+    <script>
+        // Function to add a new requirement input field
+        function addRequirement() {
+            const container = document.getElementById('requirementsContainer');
+
+            const newRequirement = document.createElement('div');
+            newRequirement.classList.add('requirement-item', 'flex', 'gap-2', 'mb-2');
+
+            newRequirement.innerHTML = `
+                <input type="text" name="requirements[]"
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="Enter a requirement (e.g., Basic programming knowledge)">
+                <button type="button" onclick="removeRequirement(this)"
+                    class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            container.appendChild(newRequirement);
+        }
+
+        // Function to remove a requirement input field
+        function removeRequirement(button) {
+            button.parentElement.remove();
+        }
+    </script>
 </body>
 
 </html>

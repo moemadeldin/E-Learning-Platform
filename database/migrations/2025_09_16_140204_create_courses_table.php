@@ -34,6 +34,7 @@ return new class extends Migration
             $table->boolean('is_free')->default(false)->index();
             $table->string('level')->nullable()->index();
             $table->char('language', 2)->nullable()->index();
+            $table->json('requirements')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

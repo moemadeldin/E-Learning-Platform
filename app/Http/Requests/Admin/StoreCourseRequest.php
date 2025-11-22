@@ -39,6 +39,8 @@ final class StoreCourseRequest extends FormRequest
             'language' => ['required', 'string', 'size:2'],
             'category_id' => ['required', 'exists:categories,id'],
             'user_id' => [Rule::requiredIf(fn (): bool => Auth::user()->isAdmin()), 'exists:users,id'],
+            'requirements' => ['required', 'array'],
+            'requirements.*' => ['required', 'string']
         ];
     }
 }

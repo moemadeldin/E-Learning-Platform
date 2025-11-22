@@ -36,6 +36,8 @@ final class UpdateCourseRequest extends FormRequest
             'language' => ['nullable', 'string', 'size:2'],
             'category_id' => ['nullable', 'exists:categories,id'],
             'user_id' => ['nullable', 'exists:users,id'],
+            'requirements' => ['nullable', 'array'],
+            'requirements.*' => ['required', 'string']
         ];
     }
 }

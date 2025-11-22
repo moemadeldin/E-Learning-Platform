@@ -225,15 +225,16 @@
                     </div>
 
                     <!-- Requirements -->
-                    <div class="bg-dark-800 rounded-lg p-6 mt-8">
-                        <h2 class="text-2xl font-bold mb-4">Requirements</h2>
-                        <ul class="list-disc list-inside space-y-2 text-gray-300">
-                            <li>No programming experience needed. You will learn everything you need to know</li>
-                            <li>A computer with internet access</li>
-                            <li>No paid software required. All coding will be done in free editors</li>
-                            <li>Willingness to learn and excitement about web development</li>
-                        </ul>
-                    </div>
+                    @if(count($course->requirements) > 0)
+                        <div class="bg-dark-800 rounded-lg p-6 mt-8">
+                            <h2 class="text-2xl font-bold mb-4">Requirements</h2>
+                            <ul class="list-disc list-inside space-y-2 text-gray-300">
+                                @foreach($course->requirements as $requirement)
+                                    <li>{{ $requirement }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Right Sidebar - Course Card -->
