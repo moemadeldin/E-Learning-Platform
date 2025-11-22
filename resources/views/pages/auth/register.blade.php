@@ -15,7 +15,7 @@
         <x-link href="{{ route('login') }}" linkText="Login">
             Already have an account?
         </x-link>
-        <x-link href="{{ route('teacher.register') }}" linkText="Register">
+        <x-link href="{{ route('teacher.register.get') }}" linkText="Register">
             Register as a teacher?
         </x-link>
     </x-form-wrapper>

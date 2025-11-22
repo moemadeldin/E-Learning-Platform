@@ -14,6 +14,7 @@ final readonly class TeacherRegistrationDTO
         public string $last_name,
         public string $national_id,
         public string $category_id,
+        public string $title,
 
     ) {}
 
@@ -27,6 +28,7 @@ final readonly class TeacherRegistrationDTO
             $data['last_name'],
             $data['national_id'],
             $data['category_id'],
+            $data['title'],
         );
     }
 
@@ -40,6 +42,7 @@ final readonly class TeacherRegistrationDTO
             'last_name' => $this->last_name,
             'national_id' => $this->national_id,
             'category_id' => $this->category_id,
+            'title' => $this->title,
         ];
     }
 }

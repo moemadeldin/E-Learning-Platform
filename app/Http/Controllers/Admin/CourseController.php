@@ -15,7 +15,10 @@ use Illuminate\View\View;
 
 final class CourseController extends BaseCourseController
 {
-    public function __construct(private readonly CourseServiceInterface $courseService) {}
+    public function __construct(private readonly CourseServiceInterface $courseService)
+    {
+        parent::__construct($courseService);
+    }
 
     public function index(CourseFilterRequest $request): View
     {

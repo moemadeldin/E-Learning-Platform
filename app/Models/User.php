@@ -57,9 +57,9 @@ final class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'user_roles');
     }
 
-    public function course(): HasOne
+    public function courses(): HasMany
     {
-        return $this->hasOne(Course::class);
+        return $this->hasMany(Course::class);
     }
 
     public function hasAnyRole(array $roles): bool
@@ -69,12 +69,16 @@ final class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->roles()->first()?->name->value === Roles::ADMIN->value;
+        $role = $this->roles->first();
+
+        return $role?->name->value === Roles::ADMIN->value;
     }
 
     public function isTeacher(): bool
     {
-        return $this->roles()->first()?->name->value === Roles::TEACHER->value && $this->teacher?->is_approved;
+        $role = $this->roles->first();
+
+        return $role?->name->value === Roles::TEACHER->value && $this->teacher?->is_approved;
     }
 
     public function isActive(): bool
@@ -91,6 +95,14 @@ final class User extends Authenticatable
     {
         return $query->whereHas('roles', function (Builder $q): void {
             $q->where('name', Roles::TEACHER->value)
+                ->where('is_active', true);
+        });
+    }
+
+    public function scopeActiveStudents(Builder $query): Builder
+    {
+        return $query->whereHas('roles', function (Builder $q): void {
+            $q->where('name', Roles::USER->value)
                 ->where('is_active', true);
         });
     }
@@ -138,7 +150,14 @@ final class User extends Authenticatable
 
     public function enrollments(): HasMany
     {
-        return $this->hasMany(Enrollment::class);
+        return $this->hasMany(Enrollment::class, 'student_id');
+    }
+
+    public function enrolledCourses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'enrollments', 'student_id', 'course_id')
+            ->withPivot(['enrolled_at', 'progress'])
+            ->withTimestamps();
     }
 
     /**

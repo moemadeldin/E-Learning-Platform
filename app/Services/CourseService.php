@@ -25,7 +25,11 @@ final class CourseService implements CourseServiceInterface
         if ($user && $user->isTeacher() && ! $user->isAdmin()) {
             $query->courseOwner($user);
         }
-
+        $query->with([
+            'teacher.profile',
+            'teacher.teacher',
+            'category',
+        ]);
         $query->filteredCourses($filters['is_free'] ?? null, $filters['slug'] ?? null);
 
         $courses = $query->paginate(Pagination::COURSES_PER_PAGE->value)->withQueryString();

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AboutController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
@@ -12,4 +13,4 @@ foreach (['guest', 'admin', 'teacher', 'auth'] as $file) {
 
 Route::get('/home', HomeController::class)->name('home');
 Route::resource('/courses', CourseController::class);
-Route::view('/about-us', 'pages.about')->name('about');
+Route::get('/about-us', AboutController::class)->name('about');

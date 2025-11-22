@@ -32,6 +32,7 @@ final class StoreTeacherRequest extends FormRequest
             'last_name' => ['required', 'string'],
             'national_id' => ['required', 'digits:14', 'unique:teachers,national_id'],
             'category_id' => ['required', 'integer', 'exists:categories,id'],
+            'title' => ['required', 'string'],
         ];
     }
 }

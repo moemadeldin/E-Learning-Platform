@@ -8,6 +8,8 @@ use App\Http\Requests\Admin\CourseFilterRequest;
 use App\Interfaces\CourseServiceInterface;
 use App\Models\Category;
 use App\Models\Course;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 final class CourseController extends Controller
@@ -26,7 +28,26 @@ final class CourseController extends Controller
 
     public function show(Course $course): View
     {
-        $categories = Category::getCategories()->get();
-        return view('pages.course', compact(['course', 'categories']));
+        $course->load([
+            'sections.lessons.attachments',
+            'teacher.profile',
+            'teacher.teacher',
+            'category',
+            'reviews',
+        ]);
+        $course->loadCount([
+            'reviews',
+            'enrollments',
+            'lessons',
+            'sections',
+        ]);
+        $categories = Cache::remember('categories.'.Category::max('updated_at'), 3600, function (): Collection {
+            return Category::getCategories()->get();
+        });
+
+        return view('pages.course', [
+            'course' => $course,
+            'categories' => $categories,
+        ]);
     }
 }

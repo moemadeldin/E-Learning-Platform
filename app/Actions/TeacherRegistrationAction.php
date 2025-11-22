@@ -20,6 +20,10 @@ final class TeacherRegistrationAction
 
             $roleId = Role::roleByName(Roles::TEACHER->value)->value('id');
             $user->roles()->attach($roleId);
+            $user->profile()->create([
+                'first_name' => $dto->first_name,
+                'last_name' => $dto->last_name,
+            ]);
 
             return $user;
         });

@@ -16,7 +16,8 @@ Route::middleware(['guest'])
             Route::post('/login', 'login')->name('login.post');
         });
         Route::controller(TeacherRegistrationController::class)->group(function (): void {
-            Route::get('/teacher-register', 'registerForm')->name('teacher.register');
+            Route::get('/teacher-register', 'registerForm')->name('teacher.register.get');
+            Route::post('/teacher-register', 'register')->name('teacher.register.post');
         });
         Route::controller(PasswordRecoveryController::class)->group(function (): void {
             Route::get('/forgot-password', 'forgotPasswordForm')->name('forgot-password.get');

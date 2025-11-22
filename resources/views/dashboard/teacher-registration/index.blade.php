@@ -18,7 +18,7 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse ($teachers as $teacher)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $teacher->first_name }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $teacher->user->profile->full_name}}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ $teacher->category->name }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">

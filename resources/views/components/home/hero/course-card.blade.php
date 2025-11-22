@@ -46,21 +46,20 @@
             <h3 class="text-lg font-bold text-white mb-1">{{ $title }}</h3>
         </a>
         <p class="text-slate-400 text-sm mb-4">{{ $description }}</p>
-        {{-- <div class="flex justify-between text-sm text-slate-500 mb-3">
+        <div class="flex justify-between text-sm text-slate-500 mb-3">
             <div><i class="far fa-list-alt mr-2"></i>{{ $lessons }} Lessons</div>
-            <div><i class="far fa-clock mr-2"></i>{{ $hours }} Hours</div>
-        </div> --}}
+        </div>
 
         <div class="flex justify-between items-center mb-4">
             <span class="px-3 py-1 text-xs bg-gradient-to-r from-{{ $levelColorFrom }} to-{{ $levelColorTo }} text-white rounded-full">{{ $levelText }}</span>
-            {{-- <div class="flex items-center text-yellow-400">
+            <div class="flex items-center text-yellow-400">
                 <i class="fas fa-star mr-1"></i> {{ $rating }}
-            </div> --}}
+            </div>
         </div>
 
         <div class="flex justify-between items-center border-t border-slate-600 pt-4">
             <div class="flex items-center">
-                {{-- <img src="{{ $instructorImage }}" alt="Instructor" class="w-8 h-8 rounded-full mr-2"> --}}
+                <img src="{{ $instructorImage }}" alt="Instructor" class="w-8 h-8 rounded-full mr-2">
                 <span class="text-slate-300 text-sm">{{ $instructorName }}</span>
             </div>
             <span class="text-green-400 font-bold text-lg">{{ $price }}</span>

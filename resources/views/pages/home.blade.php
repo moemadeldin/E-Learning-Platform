@@ -36,11 +36,13 @@
                     @foreach ($courses as $course)
                         <x-home.hero.course-card category="{{ $course->category->name }}"
                             courseThumbnail="{{ asset('storage/' . $course->thumbnail) }}" badgeText="Best Seller"
-                            title="{{ $course->capitalized_title }}" description="{{ $course->description }}" lessons="12"
-                            hours="8" levelText="{{ $course->level->label() }}" levelColorFrom="blue-900"
-                            levelColorTo="blue-200" rating="4.5" instructorName="{{ $course->capitalized_instructor}}"
+                            title="{{ $course->capitalized_title }}" description="{{ $course->description }}" lessons="{{ $course->lessons_count }}"
+                            levelText="{{ $course->level->label() }}" levelColorFrom="blue-900"
+                            levelColorTo="blue-200" rating="" instructorName="{{ $course->capitalized_instructor}}"
+                            instructorImage="{{ asset('storage/' . $course->teacher->profile->avatar) }}"
                             price="{{ $course->formatted_price }}" courseUrl="{{ route('courses.show', $course) }}" />
                     @endforeach
+
                 </section>
         </main>
 

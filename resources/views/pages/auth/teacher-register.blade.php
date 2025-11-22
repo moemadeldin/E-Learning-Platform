@@ -21,6 +21,7 @@
             <x-select label="Category ID" name="category_id"
                 :options="\App\Models\Category::getCategoriesById()->pluck('name', 'id')" />
             <x-input label="Email address" name="email" type="email" autocomplete="email" />
+            <x-input label="Job Title" name="title" autocomplete="title" />
             <x-input label="Password" name="password" type="password" autocomplete="current-password" />
             <x-input label="Password Confirmation" name="password_confirmation" type="password"
                 autocomplete="current-password" />

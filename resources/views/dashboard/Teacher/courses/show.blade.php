@@ -96,15 +96,19 @@
                                     <p class="text-sm text-gray-600">{{ $section->lessons_count }} lessons</p>
                                 </div>
                                 <div class="flex gap-2">
-                                    <form action="{{ route('sections.edit', ['course' => $course, 'section' => $section]) }}"
-                                        method="GET">
-                                        @csrf
-                                        <button type="submit"
-                                            class="cursor-pointer px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">
-                                            Update
-                                        </button>
-                                    </form>
+                                    <!-- Add Lesson Button -->
+                                    <a href="{{ route('lessons.create', ['course' => $course, 'section' => $section]) }}"
+                                        class="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700">
+                                        Add Lesson
+                                    </a>
 
+                                    <!-- Update Section Button -->
+                                    <a href="{{ route('sections.edit', ['course' => $course, 'section' => $section]) }}"
+                                        class="px-3 py-1 bg-yellow-600 text-white text-sm rounded hover:bg-yellow-700">
+                                        Update
+                                    </a>
+
+                                    <!-- Delete Section Button -->
                                     <form action="{{ route('sections.destroy', ['course' => $course, 'section' => $section]) }}"
                                         method="POST" onsubmit="return confirm('Delete this section and all its lessons?')">
                                         @csrf
@@ -117,57 +121,10 @@
                                 </div>
                             </div>
 
-                            <!-- Add Lesson Form (Hidden by Default) -->
-                            {{-- <div id="lessonForm-{{ $section->id }}" class="p-4 border-b bg-gray-50 hidden">
-                                <h4 class="font-semibold mb-3">Add New Lesson to {{ $section->title }}</h4>
-                                <form action="{{ route('lessons.store', $section) }}" method="POST"
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Title</label>
-                                            <input type="text" name="title" required
-                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">Order</label>
-                                            <input type="number" name="order"
-                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                                                placeholder="Auto-calculated">
-                                        </div>
-                                        <div class="md:col-span-2">
-                                            <label class="block text-sm font-medium text-gray-700">Content</label>
-                                            <textarea name="content" rows="3"
-                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
-                                        </div>
-                                        <div class="md:col-span-2">
-                                            <label class="block text-sm font-medium text-gray-700">Video URL</label>
-                                            <input type="url" name="video_url"
-                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                        </div>
-                                        <div class="md:col-span-2">
-                                            <label class="block text-sm font-medium text-gray-700">Attachments</label>
-                                            <input type="file" name="attachments[]" multiple
-                                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                                        </div>
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <button type="submit"
-                                            class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                                            Create Lesson
-                                        </button>
-                                        <button type="button" onclick="toggleLessonForm({{ $section->id }})"
-                                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </form>
-                            </div> --}}
-
                             <!-- Lessons List -->
                             <div class="divide-y">
                                 @forelse($section->lessons as $lesson)
-                                    <div class="p-4 flex justify-between items-center">
+                                    <div class="p-4 flex justify-between items-center hover:bg-gray-50">
                                         <div class="flex items-center gap-3">
                                             <div class="text-gray-400">
                                                 <i class="fas fa-play-circle"></i>
@@ -183,35 +140,50 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        {{-- <div class="flex gap-2">
-                                            <a href="{{ route('lessons.show', [$course, $lesson]) }}"
+                                        <div class="flex gap-2">
+                                            <!-- View Lesson Button -->
+                                            {{-- <a href="{{ route('lessons.show', ['course' => $course, 'lesson' => $lesson]) }}"
                                                 class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
                                                 View
-                                            </a>
-                                            <a href="{{ route('lessons.edit', $lesson) }}"
+                                            </a> --}}
+
+                                            <!-- Edit Lesson Button -->
+                                            {{-- <a href="{{ route('lessons.edit', ['course' => $course, 'lesson' => $lesson]) }}"
                                                 class="px-3 py-1 bg-yellow-600 text-white text-sm rounded hover:bg-yellow-700">
                                                 Edit
-                                            </a>
-                                            <form action="{{ route('lessons.destroy', $lesson) }}" method="POST"
-                                                onsubmit="return confirm('Delete this lesson?')">
-                                                @csrf @method('DELETE')
+                                            </a> --}}
+
+                                            <!-- Delete Lesson Button -->
+                                            {{-- <form
+                                                action="{{ route('lessons.destroy', ['course' => $course, 'lesson' => $lesson]) }}"
+                                                method="POST" onsubmit="return confirm('Delete this lesson?')">
+                                                @csrf
+                                                @method('DELETE')
                                                 <button type="submit"
                                                     class="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700">
                                                     Delete
                                                 </button>
-                                            </form>
-                                        </div> --}}
+                                            </form> --}}
+                                        </div>
                                     </div>
                                 @empty
-                                    <div class="p-4 text-center text-gray-500">
-                                        No lessons in this section yet.
+                                    <div class="p-4 text-center text-gray-500 bg-gray-50">
+                                        <p class="mb-2">No lessons in this section yet.</p>
+                                        <a href="{{ route('lessons.create', ['course' => $course, 'section' => $section]) }}"
+                                            class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                            Add your first lesson
+                                        </a>
                                     </div>
                                 @endforelse
                             </div>
                         </div>
                     @empty
-                        <div class="text-center py-8 text-gray-500">
-                            No sections created yet. Add your first section to get started!
+                        <div class="text-center py-8 text-gray-500 bg-gray-50 rounded-lg">
+                            <p class="mb-4">No sections created yet.</p>
+                            <button onclick="toggleSectionForm()"
+                                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                                Add your first section
+                            </button>
                         </div>
                     @endforelse
                 </div>
@@ -222,10 +194,6 @@
     <script>
         function toggleSectionForm() {
             document.getElementById('sectionForm').classList.toggle('hidden');
-        }
-
-        function toggleLessonForm(sectionId) {
-            document.getElementById('lessonForm-' + sectionId).classList.toggle('hidden');
         }
     </script>
 @endsection

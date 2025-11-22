@@ -10,8 +10,7 @@
         </div>
         @auth
             @if (
-                    Auth::user()->isAdmin()
-                    || Auth::user()->isTeacher()
+                    Auth::user()->isAdmin() || Auth::user()->isTeacher()
                 )
                 <a href="{{ route('dashboard') }}" class="text-slate-300 hover:text-white transition">Dashboard</a>
             @endif
@@ -28,7 +27,7 @@
                 <a href="{{ route('profiles.index')}}"
                     class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-md text-white font-medium transition cursor-pointer">
                     My Profile
-            </a>
+                </a>
             @else
                 <a href="{{ route('login') }}" class="px-4 py-2 text-slate-300 hover:text-white transition font-medium">
                     Sign In

@@ -14,7 +14,10 @@ use Illuminate\View\View;
 
 final class CourseController extends BaseCourseController
 {
-    public function __construct(private readonly CourseServiceInterface $courseService) {}
+    public function __construct(private readonly CourseServiceInterface $courseService)
+    {
+        parent::__construct($courseService);
+    }
 
     public function index(CourseFilterRequest $request): View
     {
@@ -26,16 +29,10 @@ final class CourseController extends BaseCourseController
         ]);
     }
 
-    public function show(Course $course)
+    public function show(Course $course): View
     {
-        $course->load([
-            'sections' => function($query): void {
-                $query->orderBy('order')->withCount('lessons');
-            },
-            'sections.lessons' => function($query): void {
-                $query->orderBy('order')->withCount('attachments');
-            }
-        ])->loadCount(['sections', 'lessons']);
+        $course->load(['sections.lessons']);
+        $course->loadCount('sections', 'lessons', 'students');
 
         return view('dashboard.Teacher.courses.show', compact('course'));
     }

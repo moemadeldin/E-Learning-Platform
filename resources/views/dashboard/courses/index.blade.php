@@ -76,7 +76,7 @@
                                 <td class="px-4 py-3 truncate">{{ $course->name }}</td>
                                 <td class="px-4 py-3 truncate">{{ $course->slug }}</td>
                                 <td class="px-4 py-3 truncate">{{ $course->category->name ?? 'N/A' }}</td>
-                                <td class="px-4 py-3 truncate">{{ $course->user->teacher->full_name ?? 'N/A' }}</td>
+                                <td class="px-4 py-3 truncate">{{ $course->teacher->full_name ?? 'N/A' }}</td>
                                 <td class="px-4 py-3 text-center">
                                     <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="Thumbnail"
                                         class="w-16 h-16 object-cover mx-auto rounded">

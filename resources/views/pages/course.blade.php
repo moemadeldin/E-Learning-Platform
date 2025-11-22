@@ -46,10 +46,11 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-out;
+            padding-left: 1rem;
         }
 
-        .accordion-content.active {
-            max-height: 500px;
+        .accordion-content.show {
+            max-height: 1000px;
         }
 
         .course-card {
@@ -71,6 +72,11 @@
 
         .accordion-header i.rotate {
             transform: rotate(180deg);
+        }
+
+        /* Remove the old .active class */
+        .accordion-content.active {
+            max-height: 500px;
         }
     </style>
 </head>
@@ -123,15 +129,15 @@
                         <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400">
                             <div class="flex items-center">
                                 <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                <span> ({{ $course->reviews()->count() }} ratings)</span>
+                                <span> ({{ $course->reviews_count }} ratings)</span>
                             </div>
                             <div class="flex items-center">
                                 <i class="fas fa-user-graduate mr-1"></i>
-                                <span>{{ $course->enrollments()->count() }} students</span>
+                                <span>{{ $course->enrollments_count }} students</span>
                             </div>
                             <div class="flex items-center">
                                 <i class="fas fa-clock mr-1"></i>
-                                <span>{{ $course->lessons()->count() }} lessons</span>
+                                <span>{{ $course->lessons_count }} lessons</span>
                             </div>
                             <div class="flex items-center">
                                 <i class="fas fa-signal mr-1"></i>
@@ -150,20 +156,21 @@
 
                     <!-- Instructor Info -->
                     <div class="bg-dark-800 rounded-lg p-6 mb-8">
-                        <h2 class="text-xl font-bold mb-4">Created by {{ $course->user->name }}</h2>
+                        <h2 class="text-xl font-bold mb-4">Created by {{ $course->teacher->name }}</h2>
                         <div class="flex items-center">
-                            <img src="{{ asset('/storage/' . $course->user->profile->avatar) }}" alt="Instructor"
+                            <img src="{{ asset('/storage/' . $course->teacher->profile->avatar) }}" alt="Instructor"
                                 class="w-16 h-16 rounded-full mr-4">
                             <div>
                                 <h3 class="font-bold text-lg">{{ $course->capitalized_instructor }}</h3>
-                                <p class="text-gray-400 mb-2">{{ $course->user->teacher->title }}</p>
+                                <p class="text-gray-400 mb-2">{{ $course->teacher->teacher->title }}</p>
                                 <div class="flex items-center text-sm text-gray-400">
                                     <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                    <span class="mr-4">{{ $course->user->teacher->avg_rating }} Instructor Rating</span>
+                                    <span class="mr-4">{{ $course->teacher->teacher->avg_rating }} Instructor
+                                        Rating</span>
                                     <i class="fas fa-user-graduate mr-1"></i>
-                                    <span class="mr-4">{{ $course->user->teacher->reviews_count }} Reviews</span>
+                                    <span class="mr-4">{{ $course->teacher->teacher->reviews_count }} Reviews</span>
                                     <i class="fas fa-users mr-1"></i>
-                                    <span>{{ $course->user->teacher->students_count }} Students</span>
+                                    <span>{{ $course->teacher->teacher->students_count }} Students</span>
                                 </div>
                             </div>
                         </div>
@@ -175,10 +182,10 @@
 
                         <div class="mb-4 flex justify-between items-center">
                             <div>
-                                <span class="text-gray-400">{{ $course->sections()->count() }} Sections •
-                                    {{ $course->lessons()->count() }} lessons</span>
+                                <span class="text-gray-400">{{ $course->sections_count }} Sections •
+                                    {{ $course->lessons_count }} lessons</span>
                             </div>
-                            <button class="text-indigo-400 hover:text-indigo-300 text-sm font-medium">
+                            <button id="expandAll" class="text-indigo-400 hover:text-indigo-300 text-sm font-medium">
                                 Expand all sections
                             </button>
                         </div>
@@ -189,20 +196,25 @@
                                     <div class="accordion-header flex justify-between items-center py-4 cursor-pointer">
                                         <div>
                                             <h3 class="font-semibold">{{ $section->title }}</h3>
-                                            <p class="text-sm text-gray-400 mt-1">{{ $section->lessons->count() }} Lessons
+                                            <p class="text-sm text-gray-400 mt-1">{{ $section->lessons_count }} Lessons
                                             </p>
                                         </div>
                                         <i class="fas fa-chevron-down transition-transform"></i>
                                     </div>
-                                    <div class="accordion-content pl-4 hidden">
+                                    <div class="accordion-content">
                                         <ul class="pb-4 space-y-2">
                                             @foreach ($section->lessons as $lesson)
                                                 <li class="flex justify-between items-center py-2">
                                                     <div class="flex items-center">
                                                         <i class="far fa-play-circle text-gray-500 mr-3"></i>
-                                                        <span>{{ $lesson->title }}</span>
+                                                        <a
+                                                            href="{{ route('lessons.show', ['course' => $course, 'section' => $section, 'lesson' => $lesson]) }}">{{ $lesson->title }}</a>
                                                     </div>
-                                                    <span class="text-gray-400 text-sm">{{ $lesson->duration ?? 'N/A' }}</span>
+                                                    <span class="text-sm text-gray-400">
+                                                        @if($lesson->duration)
+                                                            {{ $lesson->duration }}
+                                                        @endif
+                                                    </span>
                                                 </li>
                                             @endforeach
                                         </ul>
@@ -249,35 +261,46 @@
                             </div>
                         </div>
                         <div class="p-6">
-                            <div class="flex items-center justify-between mb-4">
-                                <span
-                                    class="text-3xl font-bold text-white">{{ $course->formatted_price === 0 ? 'Free' : $course->formatted_price}}</span>
-                            </div>
-                            <div class="space-y-4">
-                                <button
-                                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
-                                    Add to Cart
-                                </button>
-                                <button
-                                    class="w-full bg-transparent border border-indigo-500 hover:bg-indigo-900 text-white font-semibold py-3 px-4 rounded-lg transition">
-                                    Buy Now
-                                </button>
-                            </div>
-
-                            <div class="mt-6 text-center">
-                                <p class="text-gray-400 text-sm">30-Day Money-Back Guarantee</p>
-                            </div>
-
+                            @if ($course->teacher()->is(auth()->user()))
+                                <div class="flex items-center justify-between mb-4">
+                                    <span
+                                        class="text-3xl font-bold text-white">{{ $course->formatted_price === 0 ? 'Free' : $course->formatted_price}}</span>
+                                </div>
+                                <div class="space-y-4">
+                                    <a href="{{ route('dashboard.teacher.courses.edit', $course) }}"
+                                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
+                                        Edit Course
+                                    </a>
+                                </div>
+                            @else
+                                                    <div class="flex items-center justify-between mb-4">
+                                                        <span class="text-3xl font-bold text-white">{{ $course->formatted_price === 0 ? 'Free' :
+                                $course->formatted_price}}</span>
+                                                    </div>
+                                                    <div class="space-y-4">
+                                                        <button
+                                                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
+                                                            Add to Cart
+                                                        </button>
+                                                        <button
+                                                            class="w-full bg-transparent border border-indigo-500 hover:bg-indigo-900 text-white font-semibold py-3 px-4 rounded-lg transition">
+                                                            Buy Now
+                                                        </button>
+                                                    </div>
+                                                    <div class="mt-6 text-center">
+                                                        <p class="text-gray-400 text-sm">30-Day Money-Back Guarantee</p>
+                                                    </div>
+                            @endif
                             <div class="mt-6 space-y-3">
                                 <h3 class="font-semibold text-lg mb-2">This course includes:</h3>
                                 <div class="flex items-center text-sm text-gray-300">
                                     <i class="far fa-play-circle text-gray-500 mr-3"></i>
-                                    <span>{{ $course->lessons()->count() }} lessons on-demand videos</span>
+                                    <span>{{ $course->lessons_count }} lessons on-demand videos</span>
                                 </div>
-                                {{-- <div class="flex items-center text-sm text-gray-300">
+                                <div class="flex items-center text-sm text-gray-300">
                                     <i class="far fa-file-alt text-gray-500 mr-3"></i>
-                                    <span>48 articles</span>
-                                </div> --}}
+                                    <span>{{ $course->pdf_and_document_attachments}} articles</span>
+                                </div>
                                 <div class="flex items-center text-sm text-gray-300">
                                     <i class="far fa-life-ring text-gray-500 mr-3"></i>
                                     <span>Full lifetime access</span>
@@ -337,13 +360,43 @@
 
     <!-- Accordion Toggle Script -->
     <script>
-        document.querySelectorAll('.accordion-header').forEach(header => {
-            header.addEventListener('click', () => {
-                const content = header.nextElementSibling;
-                const icon = header.querySelector('i');
+        document.addEventListener('DOMContentLoaded', function () {
+            // Accordion functionality
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('i');
 
-                content.classList.toggle('active');
-                icon.classList.toggle('rotate');
+                    // Toggle current section
+                    content.classList.toggle('show');
+                    icon.classList.toggle('rotate');
+                });
+            });
+
+            // Expand all sections button
+            document.getElementById('expandAll').addEventListener('click', function () {
+                const allContents = document.querySelectorAll('.accordion-content');
+                const allIcons = document.querySelectorAll('.accordion-header i');
+                const isExpanded = allContents[0]?.classList.contains('show');
+
+                allContents.forEach(content => {
+                    if (isExpanded) {
+                        content.classList.remove('show');
+                    } else {
+                        content.classList.add('show');
+                    }
+                });
+
+                allIcons.forEach(icon => {
+                    if (isExpanded) {
+                        icon.classList.remove('rotate');
+                    } else {
+                        icon.classList.add('rotate');
+                    }
+                });
+
+                // Update button text
+                this.textContent = isExpanded ? 'Expand all sections' : 'Collapse all sections';
             });
         });
     </script>

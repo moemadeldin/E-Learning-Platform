@@ -20,7 +20,7 @@ final class StoreSectionRequest extends FormRequest
         #[CurrentUser()] User $user,
         #[RouteParameter('course')] Course $course
     ): bool {
-        return $course->user()->is($user);
+        return $course->teacher()->is($user);
     }
 
     /**

@@ -21,20 +21,25 @@ final class SectionController extends Controller
     {
         return view('dashboard.Teacher.courses.show', compact(['course', 'section']));
     }
+
     public function store(StoreSectionRequest $request, Course $course, CreateSectionAction $action): RedirectResponse
     {
         $action->execute($request->validated(), $course);
+
         return redirect()->back();
 
     }
+
     public function edit(Course $course, Section $section): View
     {
         return view('dashboard.Teacher.courses.sections.update', compact(['course', 'section']));
     }
+
     public function update(UpdateSectionRequest $request, Course $course, Section $section, UpdateSectionAction $action): RedirectResponse
     {
         $this->authorize('update', $course);
         $action->execute($request->validated(), $section);
+
         return redirect()->back();
     }
 

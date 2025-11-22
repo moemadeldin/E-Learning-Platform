@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\CreateCategoryAction;
+use App\Actions\DeleteCategoryAction;
+use App\Actions\UpdateCategoryAction;
 use App\DTOs\Admin\CategoryDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreCategoryRequest;
@@ -25,10 +28,9 @@ final class CategoryController extends Controller
         return view('dashboard.categories.create');
     }
 
-    public function store(StoreCategoryRequest $request): RedirectResponse
+    public function store(StoreCategoryRequest $request, CreateCategoryAction $action): RedirectResponse
     {
-        $dto = CategoryDTO::fromArray($request->validated());
-        $category = Category::create($dto->toArray());
+        $action->execute(CategoryDTO::fromArray($request->validated()));
 
         return redirect()->route('categories.index')->with('success', 'Category added successfully!');
     }
@@ -43,17 +45,16 @@ final class CategoryController extends Controller
         return view('dashboard.categories.update', compact('category'));
     }
 
-    public function update(StoreCategoryRequest $request, Category $category): RedirectResponse
+    public function update(StoreCategoryRequest $request, Category $category, UpdateCategoryAction $action): RedirectResponse
     {
-        $dto = CategoryDTO::fromArray($request->validated());
-        $category->update($dto->toArray());
+        $action->execute(CategoryDTO::fromArray($request->validated()), $category);
 
         return redirect()->route('categories.index')->with('success', 'Category added successfully!');
     }
 
-    public function destroy(Category $category): RedirectResponse
+    public function destroy(Category $category, DeleteCategoryAction $action): RedirectResponse
     {
-        $category->delete();
+        $action->execute($category);
 
         return redirect()->route('categories.index')->with('success', 'Category Deleted successfully!');
     }
