@@ -34,12 +34,15 @@ final class CourseController extends Controller
             'teacher.teacher',
             'category',
             'reviews',
+            'comments.user.profile',
+            'comments.replies.user.profile',
         ]);
         $course->loadCount([
             'reviews',
             'enrollments',
             'lessons',
             'sections',
+            'comments',
         ]);
         $categories = Cache::remember('categories.'.Category::max('updated_at'), 3600, function (): Collection {
             return Category::getCategories()->get();

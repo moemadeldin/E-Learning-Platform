@@ -40,7 +40,7 @@ final class StoreCourseRequest extends FormRequest
             'category_id' => ['required', 'exists:categories,id'],
             'user_id' => [Rule::requiredIf(fn (): bool => Auth::user()->isAdmin()), 'exists:users,id'],
             'requirements' => ['required', 'array'],
-            'requirements.*' => ['required', 'string']
+            'requirements.*' => ['required', 'string'],
         ];
     }
 }

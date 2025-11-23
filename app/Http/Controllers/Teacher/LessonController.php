@@ -49,7 +49,7 @@ final class LessonController extends Controller
      */
     public function show(Course $course, Section $section, Lesson $lesson): View
     {
-        $course->load(['sections.lessons.attachments', 'category']);
+        $course->load(['sections.lessons.attachments', 'category', 'comments.user.profile', 'comments.replies.user.profile']);
         $lesson->load(['attachments']);
         $section->load(['lessons']);
 

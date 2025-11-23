@@ -179,7 +179,7 @@ final class Course extends Model
             'price' => 'float',
             'is_free' => 'boolean',
             'level' => CourseLevel::class,
-            'requirements' => 'array'
+            'requirements' => 'array',
         ];
     }
 }

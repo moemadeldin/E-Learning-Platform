@@ -73,11 +73,6 @@
         .accordion-header i.rotate {
             transform: rotate(180deg);
         }
-
-        /* Remove the old .active class */
-        .accordion-content.active {
-            max-height: 500px;
-        }
     </style>
 </head>
 
@@ -207,14 +202,15 @@
                                                 <li class="flex justify-between items-center py-2">
                                                     <div class="flex items-center">
                                                         <i class="far fa-play-circle text-gray-500 mr-3"></i>
-                                                        <a
-                                                            href="{{ route('lessons.show', ['course' => $course, 'section' => $section, 'lesson' => $lesson]) }}">{{ $lesson->title }}</a>
-                                                    </div>
-                                                    <span class="text-sm text-gray-400">
-                                                        @if($lesson->duration)
-                                                            {{ $lesson->duration }}
+                                                        @if($course->teacher()->is(auth()->user()) || auth()->user()->enrolledCourses->contains($course))
+                                                            <a href="{{ route('lessons.show', ['course' => $course, 'section' => $section, 'lesson' => $lesson]) }}"
+                                                                class="text-indigo-400 hover:text-indigo-300 transition">
+                                                                {{ $lesson->title }}
+                                                            </a>
+                                                        @else
+                                                            <span class="text-gray-400">{{ $lesson->title }}</span>
                                                         @endif
-                                                    </span>
+                                                    </div>
                                                 </li>
                                             @endforeach
                                         </ul>
@@ -225,7 +221,7 @@
                     </div>
 
                     <!-- Requirements -->
-                    @if(count($course->requirements) > 0)
+                    @if(is_array($course->requirements) && count($course->requirements) > 0)
                         <div class="bg-dark-800 rounded-lg p-6 mt-8">
                             <h2 class="text-2xl font-bold mb-4">Requirements</h2>
                             <ul class="list-disc list-inside space-y-2 text-gray-300">
@@ -235,16 +231,81 @@
                             </ul>
                         </div>
                     @endif
-                </div>
 
+                    {{-- <!-- Reviews Section -->
+                    <div class="bg-dark-800 rounded-lg p-6 mt-8">
+                        <h2 class="text-2xl font-bold mb-6">Student Reviews</h2>
+
+                        @auth
+                        @include('partials.review-form', ['type' => 'course', 'id' => $course->id])
+                        @else
+                        <p class="text-gray-400 mb-4"><a href="{{ route('login') }}"
+                                class="text-indigo-400 hover:text-indigo-300">Login</a> to write a review</p>
+                        @endauth
+
+                        <div class="space-y-4">
+                            @foreach($course->reviews as $review)
+                            <div class="bg-dark-700 rounded-lg p-4">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="flex items-center">
+                                        <img src="{{ asset('storage/' . $review->user->profile->avatar) }}"
+                                            class="w-10 h-10 rounded-full mr-3">
+                                        <div>
+                                            <div class="font-semibold">{{ $review->user->name }}</div>
+                                            <div class="text-sm text-gray-400">{{ $review->created_at->diffForHumans()
+                                                }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex text-yellow-400">
+                                        @for($i = 1; $i <= 5; $i++) <i
+                                            class="fas fa-star{{ $i > $review->rating ? '-half-alt' : '' }}"></i>
+                                            @endfor
+                                    </div>
+                                </div>
+                                <p class="text-gray-300">{{ $review->review }}</p>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div> --}}
+
+                    <!-- Comments Section -->
+                    <div class="bg-dark-800 rounded-lg p-6 mt-8">
+                        <h2 class="text-2xl font-bold mb-6">Comments</h2>
+
+                        @php
+                            $isEnrolled = $course->relationLoaded('enrollments') 
+                                ? $course->enrollments->contains('user_id', auth()->id())
+                                : auth()->user()->enrolledCourses->contains($course);
+                        @endphp
+
+                        @if($isEnrolled || $course->teacher()->is(auth()->user()))
+                            @include('partials.comment-form', [
+                                'routeName' => 'courses.comments.store',
+                                'model' => $course
+                            ])
+                        @else
+                            <p class="text-gray-400 mb-4">You must be enrolled in the course or be the course owner to post a comment.</p>
+                        @endif
+                        
+                        <div class="space-y-4">
+                            @foreach($course->comments->where('parent_comment_id', null) as $comment)
+                                @include('partials.comment', [
+                                    'comment' => $comment,
+                                    'routeName' => 'courses.comments.store', 
+                                    'model' => $course
+                                ])
+                            @endforeach
+                        </div>
+                    </div>
+            </div>
                 <!-- Right Sidebar - Course Card -->
-                <div class="lg:w-1/3">
-                    <div class="sticky top-24 course-card bg-dark-800 rounded-xl overflow-hidden shadow-lg">
-                        <div class="h-48 bg-gray-700 relative overflow-hidden">
-                            @if($course->thumbnail)
-                                <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="Thumbnail"
-                                    class="w-full h-full object-cover">
-                            @else
+            <div class="lg:w-1/3">
+                <div class="sticky top-24 course-card bg-dark-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="h-48 bg-gray-700 relative overflow-hidden">
+                        @if($course->thumbnail)
+                            <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="Thumbnail"
+                                class="w-full h-full object-cover">
+                        @else
                                 <div
                                     class="w-full h-full bg-gradient-to-r from-blue-600 to-indigo-700 flex items-center justify-center">
                                     <i class="fas fa-image text-white text-4xl"></i>
@@ -256,42 +317,42 @@
                                 Best Seller
                             </span>
                             <div class="absolute bottom-4 left-4">
-                                <span class="bg-dark-900 text-white text-sm px-3 py-1 rounded-full">
-                                    {{ $course->category->name }}
-                                </span>
-                            </div>
+                            <span class="bg-dark-900 text-white text-sm px-3 py-1 rounded-full">
+                                {{ $course->category->name }}
+                            </span>
                         </div>
-                        <div class="p-6">
-                            @if ($course->teacher()->is(auth()->user()))
-                                <div class="flex items-center justify-between mb-4">
-                                    <span
-                                        class="text-3xl font-bold text-white">{{ $course->formatted_price === 0 ? 'Free' : $course->formatted_price}}</span>
+                    </div>
+                    <div class="p-6">
+                        @if ($course->teacher()->is(auth()->user()))
+                            <div class="flex items-center justify-between mb-4">
+                                <span
+                                    class="text-3xl font-bold text-white">{{ $course->formatted_price === 0 ? 'Free' : $course->formatted_price}}</span>
                                 </div>
-                                <div class="space-y-4">
-                                    <a href="{{ route('dashboard.teacher.courses.edit', $course) }}"
-                                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
-                                        Edit Course
-                                    </a>
+                            <div class="space-y-4">
+                                <a hr
+                                   ef="{{ route('dashboard.teacher.courses.edit', $course) }}"
+                                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
+                                    Edit Course
+                                </a>
+                            </div>
+                        @else
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-3xl font-bold text-white">{{ $course->formatted_price === 0 ? 'Free' : $course->formatted_price}}</span>
+                            </div>
+                            <div class="space-y-4">
+                                <button
+                                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
+                                    Add to Cart
+                                </button>
+                                <button
+                                        class="w-full bg-transparent border border-indigo-500 hover:bg-indigo-900 text-white font-semibold py-3 px-4 rounded-lg transition">
+                                        Buy Now
+                                    </button>
                                 </div>
-                            @else
-                                                    <div class="flex items-center justify-between mb-4">
-                                                        <span class="text-3xl font-bold text-white">{{ $course->formatted_price === 0 ? 'Free' :
-                                $course->formatted_price}}</span>
-                                                    </div>
-                                                    <div class="space-y-4">
-                                                        <button
-                                                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
-                                                            Add to Cart
-                                                        </button>
-                                                        <button
-                                                            class="w-full bg-transparent border border-indigo-500 hover:bg-indigo-900 text-white font-semibold py-3 px-4 rounded-lg transition">
-                                                            Buy Now
-                                                        </button>
-                                                    </div>
-                                                    <div class="mt-6 text-center">
-                                                        <p class="text-gray-400 text-sm">30-Day Money-Back Guarantee</p>
-                                                    </div>
-                            @endif
+                                <div class="mt-6 text-center">
+                                    <p class="text-gray-400 text-sm">30-Day Money-Back Guarantee</p>
+                                </div>
+                        @endif
                             <div class="mt-6 space-y-3">
                                 <h3 class="font-semibold text-lg mb-2">This course includes:</h3>
                                 <div class="flex items-center text-sm text-gray-300">
@@ -337,10 +398,9 @@
                                 class="text-slate-400 hover:text-white transition">Courses</a></li>
                         <li><a href="{{ route('about') }}" class="text-slate-400 hover:text-white transition">About
                                 Us</a></li>
-                    </ul>
-                </div>
-
-                <div>
+                </ul>
+            </div>
+            <div>
                     <h4 class="text-lg font-semibold mb-4">Categories</h4>
                     <ul class="space-y-2">
                         @foreach ($categories as $category)
@@ -394,7 +454,8 @@
                     } else {
                         icon.classList.add('rotate');
                     }
-                });
+       
+         });
 
                 // Update button text
                 this.textContent = isExpanded ? 'Expand all sections' : 'Collapse all sections';
@@ -402,5 +463,4 @@
         });
     </script>
 </body>
-
 </html>

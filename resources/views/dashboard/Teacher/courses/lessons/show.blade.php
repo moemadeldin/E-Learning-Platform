@@ -278,6 +278,35 @@
                     </div>
                 </div>
             </div>
+              <!-- Comments Section -->
+                    <div class="bg-dark-800 rounded-lg p-6 mt-8">
+                        <h2 class="text-2xl font-bold mb-6">Comments</h2>
+
+                        @php
+                            $isEnrolled = $course->relationLoaded('enrollments') 
+                                ? $course->enrollments->contains('user_id', auth()->id())
+                                : auth()->user()->enrolledCourses->contains($course);
+                        @endphp
+
+                        @if($isEnrolled || $course->teacher()->is(auth()->user()))
+                            @include('partials.comment-form', [
+                                'routeName' => 'courses.comments.store',
+                                'model' => $course
+                            ])
+                        @else
+                            <p class="text-gray-400 mb-4">You must be enrolled in the course or be the course owner to post a comment.</p>
+                        @endif
+                        
+                        <div class="space-y-4">
+                            @foreach($course->comments->where('parent_comment_id', null) as $comment)
+                                @include('partials.comment', [
+                                    'comment' => $comment,
+                                    'routeName' => 'courses.comments.store', 
+                                    'model' => $course
+                                ])
+                            @endforeach
+                        </div>
+                    </div>
         </div>
     </main>
 
