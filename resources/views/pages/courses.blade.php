@@ -112,7 +112,7 @@
                             </div>
 
                             <div class="flex items-center text-sm text-gray-400">
-                                <span>56 total hours • 760 lectures • {{ $course->level->label() }}</span>
+                                <span>{{ $course->lessons_count }} lessons • {{ $course->level->label() }}</span>
                             </div>
                         </div>
 

@@ -73,7 +73,8 @@
         .accordion-header i.rotate {
             transform: rotate(180deg);
         }
-    </style>
+
+        </style>
 </head>
 
 <body class="antialiased text-gray-100">
@@ -197,24 +198,30 @@
                                         <i class="fas fa-chevron-down transition-transform"></i>
                                     </div>
                                     <div class="accordion-content">
-                                        <ul class="pb-4 space-y-2">
-                                            @foreach ($section->lessons as $lesson)
-                                                <li class="flex justify-between items-center py-2">
-                                                    <div class="flex items-center">
-                                                        <i class="far fa-play-circle text-gray-500 mr-3"></i>
+                                    <ul class="pb-4 space-y-2">
+                                        @foreach ($section->lessons as $lesson)
+                                            <li class="flex justify-between items-center py-2">
+                                                <div class="flex items-center">
+                                                    <i class="far fa-play-circle text-gray-500 mr-3"></i>
+
+                                                    @auth
                                                         @if($course->teacher()->is(auth()->user()) || auth()->user()->enrolledCourses->contains($course))
                                                             <a href="{{ route('lessons.show', ['course' => $course, 'section' => $section, 'lesson' => $lesson]) }}"
-                                                                class="text-indigo-400 hover:text-indigo-300 transition">
+                                                            class="text-indigo-400 hover:text-indigo-300 transition">
                                                                 {{ $lesson->title }}
                                                             </a>
                                                         @else
                                                             <span class="text-gray-400">{{ $lesson->title }}</span>
                                                         @endif
-                                                    </div>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
+                                                    @else
+                                                        <!-- Guest users see lesson title without link -->
+                                                        <span class="text-gray-400">{{ $lesson->title }}</span>
+                                                    @endauth
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                                 </div>
                             @endforeach
                         </div>
@@ -237,43 +244,40 @@
                         <h2 class="text-2xl font-bold mb-6">Student Reviews</h2>
 
                         @auth
-                        @include('partials.review-form', ['type' => 'course', 'id' => $course->id])
-                        @else
-                        <p class="text-gray-400 mb-4"><a href="{{ route('login') }}"
-                                class="text-indigo-400 hover:text-indigo-300">Login</a> to write a review</p>
+                            @include('partials.review-form', ['type' => 'course', 'id' => $course->id])
                         @endauth
-
                         <div class="space-y-4">
                             @foreach($course->reviews as $review)
-                            <div class="bg-dark-700 rounded-lg p-4">
-                                <div class="flex justify-between items-start mb-3">
-                                    <div class="flex items-center">
-                                        <img src="{{ asset('storage/' . $review->user->profile->avatar) }}"
-                                            class="w-10 h-10 rounded-full mr-3">
-                                        <div>
-                                            <div class="font-semibold">{{ $review->user->name }}</div>
-                                            <div class="text-sm text-gray-400">{{ $review->created_at->diffForHumans()
-                                                }}</div>
+                                <div class="bg-dark-700 rounded-lg p-4">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div class="flex items-center">
+                                            <img src="{{ asset('storage/' . $review->user->profile->avatar) }}"
+                                                class="w-10 h-10 rounded-full mr-3">
+                                            <div>
+                                                <div class="font-semibold">{{ $review->user->name }}</div>
+                                                <div class="text-sm text-gray-400">{{ $review->created_at->diffForHumans()
+                                                    }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="flex text-yellow-400">
+                                            @for($i = 1; $i <= 5; $i++) <i
+                                                class="fas fa-star{{ $i > $review->rating ? '-half-alt' : '' }}"></i>
+                                            @endfor
                                         </div>
                                     </div>
-                                    <div class="flex text-yellow-400">
-                                        @for($i = 1; $i <= 5; $i++) <i
-                                            class="fas fa-star{{ $i > $review->rating ? '-half-alt' : '' }}"></i>
-                                            @endfor
-                                    </div>
+                                    <p class="text-gray-300">{{ $review->review }}</p>
                                 </div>
-                                <p class="text-gray-300">{{ $review->review }}</p>
-                            </div>
                             @endforeach
                         </div>
                     </div> --}}
 
                     <!-- Comments Section -->
-                    <div class="bg-dark-800 rounded-lg p-6 mt-8">
-                        <h2 class="text-2xl font-bold mb-6">Comments</h2>
+                                    <div class="bg-dark-800 rounded-xl p-6">
+                    <h2 class="text-2xl font-bold mb-6">Comments</h2>
 
+                    @auth
                         @php
-                            $isEnrolled = $course->relationLoaded('enrollments') 
+                            $isEnrolled = $course->relationLoaded('enrollments')
                                 ? $course->enrollments->contains('user_id', auth()->id())
                                 : auth()->user()->enrolledCourses->contains($course);
                         @endphp
@@ -284,19 +288,30 @@
                                 'model' => $course
                             ])
                         @else
-                            <p class="text-gray-400 mb-4">You must be enrolled in the course or be the course owner to post a comment.</p>
+                            <div class="bg-dark-700 rounded-lg p-4 mb-6">
+                                <p class="text-gray-400">You must be enrolled in the course or be the course owner to post a comment.</p>
+                            </div>
                         @endif
+                    @endauth
+                    
+                    <!-- Comments display - visible to all users including guests -->
+                    <div class="space-y-4">
+                        @foreach($course->comments->where('parent_comment_id', null) as $comment)
+                            @include('partials.comment', [
+                                'comment' => $comment,
+                                'routeName' => 'courses.comments.store',
+                                'model' => $course
+                            ])
+                        @endforeach
                         
-                        <div class="space-y-4">
-                            @foreach($course->comments->where('parent_comment_id', null) as $comment)
-                                @include('partials.comment', [
-                                    'comment' => $comment,
-                                    'routeName' => 'courses.comments.store', 
-                                    'model' => $course
-                                ])
-                            @endforeach
-                        </div>
+                        @if($course->comments->where('parent_comment_id', null)->count() === 0)
+                            <div class="text-center py-8">
+                                <i class="fas fa-comments text-gray-600 text-4xl mb-4"></i>
+                                <p class="text-gray-400">No comments yet. Be the first to comment!</p>
+                            </div>
+                        @endif
                     </div>
+                </div>
             </div>
                 <!-- Right Sidebar - Course Card -->
             <div class="lg:w-1/3">
@@ -306,11 +321,11 @@
                             <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="Thumbnail"
                                 class="w-full h-full object-cover">
                         @else
-                                <div
-                                    class="w-full h-full bg-gradient-to-r from-blue-600 to-indigo-700 flex items-center justify-center">
-                                    <i class="fas fa-image text-white text-4xl"></i>
-                                </div>
-                            @endif
+                            <div
+                                class="w-full h-full bg-gradient-to-r from-blue-600 to-indigo-700 flex items-center justify-center">
+                                <i class="fas fa-image text-white text-4xl"></i>
+                            </div>
+                        @endif
 
                             <span
                                 class="absolute top-4 right-4 bg-yellow-500 text-slate-900 text-xs font-bold px-2 py-1 rounded-full">
@@ -322,37 +337,48 @@
                             </span>
                         </div>
                     </div>
-                    <div class="p-6">
-                        @if ($course->teacher()->is(auth()->user()))
-                            <div class="flex items-center justify-between mb-4">
-                                <span
-                                    class="text-3xl font-bold text-white">{{ $course->formatted_price === 0 ? 'Free' : $course->formatted_price}}</span>
+                        <div class="p-6">
+                            @if ($course->teacher()->is(auth()->user()))
+                                <div class="flex items-center justify-between mb-4">
+                                    <span
+                                        class="text-3xl font-bold text-white">{{ $course->formatted_price === 0 ? 'Free' : $course->formatted_price}}</span>
+                                    </div>
+                                <div class="space-y-4">
+                                    <a href="{{ route('dashboard.teacher.courses.edit', $course) }}"
+                                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
+                                        Edit Course
+                                    </a>
                                 </div>
-                            <div class="space-y-4">
-                                <a hr
-                                   ef="{{ route('dashboard.teacher.courses.edit', $course) }}"
-                                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
-                                    Edit Course
-                                </a>
-                            </div>
-                        @else
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-3xl font-bold text-white">{{ $course->formatted_price === 0 ? 'Free' : $course->formatted_price}}</span>
-                            </div>
-                            <div class="space-y-4">
-                                <button
-                                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
-                                    Add to Cart
-                                </button>
-                                <button
-                                        class="w-full bg-transparent border border-indigo-500 hover:bg-indigo-900 text-white font-semibold py-3 px-4 rounded-lg transition">
-                                        Buy Now
-                                    </button>
+                                @elseif ($course->is_free)
+                                    <form action="{{ route('course.claim', $course) }}" method="POST">
+                                        @csrf
+                                        Free Course
+                                        <button
+                                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
+                                            Claim
+                                        </button>
+                                    </form>
+                            @else
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-3xl font-bold text-white">{{ $course->formatted_price === 0 ? 'Free' : $course->formatted_price}}</span>
                                 </div>
-                                <div class="mt-6 text-center">
-                                    <p class="text-gray-400 text-sm">30-Day Money-Back Guarantee</p>
-                                </div>
-                        @endif
+                                <div class="space-y-4">
+                                    <form action="{{ route('carts.store', $course) }}" method="POST">
+                                        @csrf
+                                        <button
+                                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
+                                            Add to Cart
+                                        </button>
+                                    </form> 
+                                    <button
+                                            class="w-full bg-transparent border border-indigo-500 hover:bg-indigo-900 text-white font-semibold py-3 px-4 rounded-lg transition">
+                                            Buy Now
+                                        </button>
+                                    </div>
+                                    <div class="mt-6 text-center">
+                                        <p class="text-gray-400 text-sm">30-Day Money-Back Guarantee</p>
+                                    </div>
+                            @endif
                             <div class="mt-6 space-y-3">
                                 <h3 class="font-semibold text-lg mb-2">This course includes:</h3>
                                 <div class="flex items-center text-sm text-gray-300">

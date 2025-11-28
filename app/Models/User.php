@@ -160,6 +160,11 @@ final class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function cart(): HasOne
+    {
+        return $this->hasOne(Cart::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

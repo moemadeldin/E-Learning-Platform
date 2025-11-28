@@ -30,6 +30,7 @@ final class CourseService implements CourseServiceInterface
             'teacher.teacher',
             'category',
         ]);
+        $query->withCount('lessons');
         $query->filteredCourses($filters['is_free'] ?? null, $filters['slug'] ?? null);
 
         $courses = $query->paginate(Pagination::COURSES_PER_PAGE->value)->withQueryString();

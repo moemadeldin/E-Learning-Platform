@@ -168,6 +168,11 @@ final class Course extends Model
             ->count();
     }
 
+    public function cartItems(): HasMany
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
     protected function casts(): array
     {
         return [

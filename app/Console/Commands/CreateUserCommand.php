@@ -75,10 +75,7 @@ final class CreateUserCommand extends Command
                 ]);
             }
             if ($roleName === Roles::USER->value) {
-                $newUser->profile()->create([
-                    'first_name' => $user['first_name'],
-                    'last_name' => $user['last_name'],
-                ]);
+                $newUser->profile()->create();
             }
 
         });

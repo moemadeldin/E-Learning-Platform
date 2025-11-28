@@ -1,7 +1,9 @@
 <x-layouts.auth :title="'Home'">
+
+
     <div class="min-h-screen flex flex-col bg-gradient-to-b from-dark-900 to-dark-800 text-white">
 
-        {{-- Header --}}
+        {{-- Use the same header component that includes the cart icon --}}
         <x-home.header />
 
         {{-- Main Content --}}
@@ -36,18 +38,18 @@
                     @foreach ($courses as $course)
                         <x-home.hero.course-card category="{{ $course->category->name }}"
                             courseThumbnail="{{ asset('storage/' . $course->thumbnail) }}" badgeText="Best Seller"
-                            title="{{ $course->capitalized_title }}" description="{{ $course->description }}" lessons="{{ $course->lessons_count }}"
-                            levelText="{{ $course->level->label() }}" levelColorFrom="blue-900"
-                            levelColorTo="blue-200" rating="" instructorName="{{ $course->capitalized_instructor}}"
+                            title="{{ $course->capitalized_title }}" description="{{ $course->description }}"
+                            lessons="{{ $course->lessons_count }}" levelText="{{ $course->level->label() }}"
+                            levelColorFrom="blue-900" levelColorTo="blue-200" rating=""
+                            instructorName="{{ $course->capitalized_instructor}}"
                             instructorImage="{{ asset('storage/' . $course->teacher->profile->avatar) }}"
                             price="{{ $course->formatted_price }}" courseUrl="{{ route('courses.show', $course) }}" />
                     @endforeach
-
                 </section>
+            </div>
         </main>
 
         {{-- Footer --}}
         <x-home.footer />
-
     </div>
 </x-layouts.auth>

@@ -56,20 +56,22 @@
         </form>
     </div>
     
-    {{-- Reply Button --}}
-    <button onclick="toggleReplyForm({{ $comment->id }})" 
-            class="text-sm text-indigo-400 hover:text-indigo-300 transition">
-        <i class="fas fa-reply mr-1"></i>Reply
-    </button>
+        @if ($course->teacher()->is(auth()->user()) || $course->enrollments->pluck('user_id')->contains(auth()->id()))
+            {{-- Reply Button --}}
+            <button onclick="toggleReplyForm({{ $comment->id }})" 
+                    class="text-sm text-indigo-400 hover:text-indigo-300 transition">
+                <i class="fas fa-reply mr-1"></i>Reply
+            </button>
 
-    {{-- Reply Form --}}
-    <div id="replyForm-{{ $comment->id }}" class="mt-3 hidden">
-        @include('partials.comment-form', [
-            'routeName' => $routeName,
-            'model' => $model,
-            'parentComment' => $comment
-        ])
-    </div>
+            {{-- Reply Form --}}
+            <div id="replyForm-{{ $comment->id }}" class="mt-3 hidden">
+                @include('partials.comment-form', [
+                    'routeName' => $routeName,
+                    'model' => $model,
+                    'parentComment' => $comment
+                ])
+            </div>
+        @endif
 
     {{-- Replies Section --}}
     @if($comment->replies && $comment->replies->isNotEmpty())
