@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FreeCourseClaimController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\Teacher\LessonController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,4 +29,11 @@ Route::middleware('auth')
             Route::delete('/carts/{cart}/courses/{course}', 'destroy')->name('carts.destroy');
         });
         Route::post('/courses/{course}', FreeCourseClaimController::class)->name('course.claim');
+
+        Route::controller(StripeController::class)->group(function (): void {
+            Route::get('/checkout', 'checkout')->name('checkout');
+            Route::post('/stripe/create-session', 'createCheckoutSession')->name('stripe.create-session');
+            Route::get('/stripe/success', 'success')->name('stripe.success');
+        });
+
     });

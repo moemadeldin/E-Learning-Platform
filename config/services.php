@@ -36,5 +36,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'stripe' => [
+        'sk' => env('STRIPE_SK'),
+        'pk' => env('STRIPE_PK'),
+    ],
 
 ];

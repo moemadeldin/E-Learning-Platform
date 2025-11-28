@@ -95,6 +95,11 @@
                             <i class="fas fa-eye mr-2"></i>
                             View Course
                         </a>
+                        <a href="{{ route('checkout') }}"
+                            class="text-indigo-400 hover:text-indigo-300 transition flex items-center">
+                            <i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+                            Checkout
+                        </a>
                     </div>
                 </div>
             </div>

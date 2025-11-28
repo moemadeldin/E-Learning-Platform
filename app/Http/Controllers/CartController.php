@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
-use App\Models\CartItem;
 use App\Models\Course;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
@@ -34,10 +33,12 @@ final class CartController extends Controller
             'cartItems' => $cartItems,
         ]);
     }
+
     public function show(#[CurrentUser()] User $user, Course $course): View
     {
         $cart = $user->cart;
         $course->loadCount(['lessons', 'enrollments']);
+
         return view('pages.show-cart', [
             'cart' => $cart,
             'course' => $course,
@@ -60,6 +61,6 @@ final class CartController extends Controller
         $cart->items()->where('course_id', $course->id)->delete();
         $user->cart()->forceDelete();
 
-            return redirect()->route('carts.index')->with('success', 'item has been deleted');
+        return redirect()->route('carts.index')->with('success', 'item has been deleted');
     }
 }
