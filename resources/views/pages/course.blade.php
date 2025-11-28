@@ -79,7 +79,9 @@
 
 <body class="antialiased text-gray-100">
     <x-home.header />
-
+{{-- @php
+    dd(auth()->user()->enrolledCourses->contains($course));
+@endphp --}}
     <main class="py-8">
         <div class="container mx-auto px-4">
             <!-- Breadcrumb -->
@@ -349,6 +351,8 @@
                                         Edit Course
                                     </a>
                                 </div>
+                                 @elseif (auth()->user()->enrolledCourses->contains($course))
+                                        Owned
                                 @elseif ($course->is_free)
                                     <form action="{{ route('course.claim', $course) }}" method="POST">
                                         @csrf
@@ -358,6 +362,7 @@
                                             Claim
                                         </button>
                                     </form>
+                               
                             @else
                                 <div class="flex items-center justify-between mb-4">
                                     <span class="text-3xl font-bold text-white">{{ $course->formatted_price === 0 ? 'Free' : $course->formatted_price}}</span>
@@ -365,7 +370,7 @@
                                 <div class="space-y-4">
                                     <form action="{{ route('carts.store', $course) }}" method="POST">
                                         @csrf
-                                        <button
+                                        <button 
                                             class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
                                             Add to Cart
                                         </button>
