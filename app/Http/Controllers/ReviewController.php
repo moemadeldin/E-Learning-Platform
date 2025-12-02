@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 
 use App\Actions\Reviews\CreateReviewAction;
 use App\Actions\Reviews\DeleteReviewAction;
-use App\Actions\Reviews\UpdateReviewAction;
 use App\Enums\Pagination;
 use App\Http\Requests\StoreReviewRequest;
 use App\Models\Course;
