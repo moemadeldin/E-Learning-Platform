@@ -31,11 +31,6 @@ final class Lesson extends Model
         return $this->hasMany(LessonAttachment::class);
     }
 
-    public function reviews(): MorphMany
-    {
-        return $this->morphMany(Review::class, 'reviewable');
-    }
-
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');

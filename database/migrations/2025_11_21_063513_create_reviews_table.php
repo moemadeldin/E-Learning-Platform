@@ -20,9 +20,14 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('users')
                 ->cascadeOnDelete();
-            $table->morphs('reviewable');
+            $table->foreignId('course_id')
+                ->nullable()
+                ->index()
+                ->constrained('courses')
+                ->cascadeOnDelete();
             $table->text('review')->nullable();
             $table->unsignedTinyInteger('rating')->default(5);
+            $table->unique(['user_id', 'course_id']);
             $table->timestamps();
             $table->softDeletes();
         });

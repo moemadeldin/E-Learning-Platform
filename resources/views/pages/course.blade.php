@@ -241,37 +241,70 @@
                         </div>
                     @endif
 
-                    {{-- <!-- Reviews Section -->
-                    <div class="bg-dark-800 rounded-lg p-6 mt-8">
-                        <h2 class="text-2xl font-bold mb-6">Student Reviews</h2>
+ <!-- Reviews Section -->
+<div class="bg-dark-800 rounded-lg p-6 mt-8">
+    <h2 class="text-2xl font-bold mb-6">Student Reviews</h2>
+{{-- 
+    @php
+        dd(auth()->guest())
+    @endphp --}}
+    @auth
+        @if(
+            auth()->user() &&
+            auth()->user()?->enrolledCourses->contains($course->id)
+            && auth()->id() !== $course->user_id 
+            && !$course->reviews()->where('user_id', auth()->id())->exists()
+            )
+            @include('partials.review-form')
+        @endif
+    @endauth
 
-                        @auth
-                            @include('partials.review-form', ['type' => 'course', 'id' => $course->id])
-                        @endauth
-                        <div class="space-y-4">
-                            @foreach($course->reviews as $review)
-                                <div class="bg-dark-700 rounded-lg p-4">
-                                    <div class="flex justify-between items-start mb-3">
-                                        <div class="flex items-center">
-                                            <img src="{{ asset('storage/' . $review->user->profile->avatar) }}"
-                                                class="w-10 h-10 rounded-full mr-3">
-                                            <div>
-                                                <div class="font-semibold">{{ $review->user->name }}</div>
-                                                <div class="text-sm text-gray-400">{{ $review->created_at->diffForHumans()
-                                                    }}</div>
-                                            </div>
-                                        </div>
-                                        <div class="flex text-yellow-400">
-                                            @for($i = 1; $i <= 5; $i++) <i
-                                                class="fas fa-star{{ $i > $review->rating ? '-half-alt' : '' }}"></i>
-                                            @endfor
-                                        </div>
-                                    </div>
-                                    <p class="text-gray-300">{{ $review->review }}</p>
-                                </div>
-                            @endforeach
+    <div class="space-y-4">
+        @foreach($course->reviews as $review)
+            <div class="bg-dark-700 rounded-lg p-4">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="flex items-center">
+                        <img src="{{ asset('storage/' . $review->user->profile->avatar) }}"
+                            class="w-10 h-10 rounded-full mr-3">
+                        <div>
+                            <div class="font-semibold">{{ $review->user->name }}</div>
+                            <div class="text-sm text-gray-400">{{ $review->created_at->diffForHumans() }}</div>
                         </div>
-                    </div> --}}
+                    </div>
+                    <div class="flex text-yellow-400">
+                        @for($i = 1; $i <= 5; $i++) 
+                            <i class="fas fa-star{{ $i > $review->rating ? '-half-alt' : '' }}"></i>
+                        @endfor
+                    </div>
+                </div>
+                <p class="text-gray-300">{{ $review->review }}</p>
+
+                @auth
+                    @if(auth()->id() === $review->user_id)
+                        <div class="mt-4 flex justify-between items-center">
+                            <!-- Edit Button -->
+                            <a href="{{ route('reviews.edit', $course) }}"
+                               class="text-blue-500 hover:text-blue-700 transition duration-200">
+                                <i class="fas fa-edit mr-1"></i> Edit
+                            </a>
+
+                            <!-- Destroy Button -->
+                            <form action="{{ route('reviews.destroy', $review->id) }}" method="POST" 
+                                  onsubmit="return confirm('Are you sure you want to delete this review?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-700 transition duration-200">
+                                    <i class="fas fa-trash mr-1"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+                @endauth
+            </div>
+        @endforeach
+    </div>
+</div>
+
 
                     <!-- Comments Section -->
                                     <div class="bg-dark-800 rounded-xl p-6">
@@ -351,7 +384,7 @@
                                         Edit Course
                                     </a>
                                 </div>
-                                 @elseif (auth()->user()->enrolledCourses->contains($course))
+                                 @elseif (auth()->user()?->enrolledCourses->contains($course))
                                         Owned
                                 @elseif ($course->is_free)
                                     <form action="{{ route('course.claim', $course) }}" method="POST">
@@ -374,12 +407,16 @@
                                             class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg transition">
                                             Add to Cart
                                         </button>
-                                    </form> 
-                                    <button
+                                    </form>
+                                    <form action="{{ route('checkout.buy-now', $course) }}" method="POST">
+                                        @csrf
+                                        <button 
                                             class="w-full bg-transparent border border-indigo-500 hover:bg-indigo-900 text-white font-semibold py-3 px-4 rounded-lg transition">
                                             Buy Now
                                         </button>
+                                    </form> 
                                     </div>
+                
                                     <div class="mt-6 text-center">
                                         <p class="text-gray-400 text-sm">30-Day Money-Back Guarantee</p>
                                     </div>

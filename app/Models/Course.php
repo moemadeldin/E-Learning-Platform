@@ -136,9 +136,9 @@ final class Course extends Model
             ->withTimestamps();
     }
 
-    public function reviews(): MorphMany
+    public function reviews(): HasMany
     {
-        return $this->morphMany(Review::class, 'reviewable');
+        return $this->hasMany(Review::class);
     }
 
     public function comments(): MorphMany

@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FreeCourseClaimController;
+use App\Http\Controllers\MyCoursesController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\Teacher\LessonController;
 use Illuminate\Support\Facades\Route;
@@ -31,9 +33,22 @@ Route::middleware('auth')
         Route::post('/courses/{course}', FreeCourseClaimController::class)->name('course.claim');
 
         Route::controller(StripeController::class)->group(function (): void {
+
+            Route::post('/checkout/{course}', 'buyNow')->name('checkout.buy-now');
+            Route::get('/checkout/single', 'singleCheckout')->name('checkout.single');
+            Route::post('/stripe/create-single-session', 'createSingleCheckoutSession')->name('stripe.create-single-session');
+
             Route::get('/checkout', 'checkout')->name('checkout');
             Route::post('/stripe/create-session', 'createCheckoutSession')->name('stripe.create-session');
             Route::get('/stripe/success', 'success')->name('stripe.success');
         });
 
+        Route::controller(ReviewController::class)->group(function (): void {
+            Route::get('/reviews', 'index')->name('reviews.index');
+            Route::get('/courses/{course}/reviews', 'edit')->name('reviews.edit');
+            Route::post('/courses/{course}/reviews', 'store')->name('reviews.store');
+            Route::patch('/reviews/{review}', 'update')->name('reviews.update');
+            Route::delete('/reviews/{review}/', 'destroy')->name('reviews.destroy');
+        });
+        Route::get('/my-courses', MyCoursesController::class)->name('my-courses');
     });

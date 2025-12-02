@@ -6,7 +6,7 @@
         <div class="flex items-center">
             <div class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
                 <a href="{{ route('home') }}">
-                    E‑Learning Platform
+                    MindByte
                 </a>
             </div>
             <x-home.header.navigation />
@@ -20,6 +20,9 @@
             @endif
         @endauth
         <div class="flex items-center space-x-4">
+            <a href="{{ route('reviews.index') }}" class="text-slate-300 hover:text-white transition">My Reviews</a>
+            <a href="{{ route('my-courses') }}" class="text-slate-300 hover:text-white transition">My
+                Courses</a>
             <!-- Cart Icon -->
             <a href="{{ route('carts.index') }}" class="relative text-slate-300 hover:text-white transition">
                 <i class="fas fa-shopping-cart text-xl"></i>

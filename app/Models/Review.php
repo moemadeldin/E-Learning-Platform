@@ -6,7 +6,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 final class Review extends Model
@@ -20,9 +19,9 @@ final class Review extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function reviewable(): MorphTo
+    public function course(): BelongsTo
     {
-        return $this->morphTo();
+        return $this->belongsTo(Course::class);
     }
 
     /**
@@ -34,6 +33,7 @@ final class Review extends Model
     {
         return [
             'user_id' => 'integer',
+            'course_id' => 'integer',
             'review' => 'string',
             'rating' => 'integer',
         ];
